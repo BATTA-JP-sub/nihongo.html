@@ -1,1 +1,38 @@
-https://accounts.google.com/devicephoneverification/begin?hl=en&flow=browser&plt=AKgnsbtqaq0Hgq5noCpiNBznXbYJzc94W56VdTOKMJ31k2UwHON9Ohiji_pg2jIYFOu8HEbb9vVobW8qPR_48Us9x8riRyDHg0rElAlIidrZmkQtz-eqzsmhVAecolpiW780ryj_OVOhWUyJJuvQ7IauzKsXLOlUjg&dsh=S2050234127:1793659057535437
+<!doctype html>
+<meta charset="utf-8">
+<title>Eaglercraft HTML チェック</title>
+<p>調べるEaglercraft HTMLファイルを選択してください。</p>
+<input id="file" type="file" accept=".html,.htm">
+<pre id="out"></pre>
+<script>
+document.getElementById('file').addEventListener('change', async event => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const text = await file.text();
+  const terms = [
+    'GuiChat', 'ChatScreen', 'chatScreen',
+    'openChat', 'chatInput', 'chat',
+    'keydown', 'KeyboardEvent'
+  ];
+  const results = [];
+
+  for (const term of terms) {
+    let pos = 0;
+    let count = 0;
+    while ((pos = text.indexOf(term, pos)) !== -1 && count < 3) {
+      const start = Math.max(0, pos - 180);
+      const end = Math.min(text.length, pos + term.length + 260);
+      results.push(
+        `--- ${term}（${count + 1}件目）---\n` +
+        text.slice(start, end).replace(/\s+/g, ' ')
+      );
+      pos += term.length;
+      count++;
+    }
+  }
+
+  document.getElementById('out').textContent =
+    results.length ? results.join('\n\n') : '該当する文字列が見つかりませんでした。';
+});
+</script>
