@@ -1,6 +1,5 @@
 <!doctype html>
 <meta charset="utf-8">
-<title>Eaglercraft HTML チェック</title>
 <p>調べるEaglercraft HTMLファイルを選択してください。</p>
 <input id="file" type="file" accept=".html,.htm">
 <pre id="out"></pre>
@@ -9,15 +8,15 @@ document.getElementById('file').addEventListener('change', async event => {
   const file = event.target.files[0];
   if (!file) return;
 
-  const text = await file.text();
-  const tags = text.match(/<(script|iframe|object|embed|link|meta)\b[^>]*>/gi) || [];
-  const urls = text.match(/[^"'<> ]+\.(?:js|wasm|bin)(?:\?[^"'<> ]*)?/gi) || [];
+  const text = await file.slice(0, 256 * 1024).text();
+  const tags = text.match(/<(?:script|iframe|object|embed|link|meta)\b[^>]*>/gi) || [];
+  const urls = text.match(/[^"'<> ]+\.(?:js|wasm|bin)(?:\?[^"' ]*)?/gi) || [];
 
   document.getElementById('out').textContent =
     'ファイル名: ' + file.name +
     '\nサイズ: ' + file.size + ' bytes' +
-    '\n\n--- ファイル冒頭 ---\n' + text.slice(0, 3000) +
-    '\n\n--- 読み込みタグ ---\n' + tags.slice(0, 40).join('\n') +
-    '\n\n--- JS / WASM / BINらしい参照 ---\n' + urls.slice(0, 40).join('\n');
+    '\n\n--- ファイル冒頭 ---\n' + text.slice(0, 2500) +
+    '\n\n--- 読み込みタグ ---\n' + tags.slice(0, 30).join('\n') +
+    '\n\n--- JS / WASM / BINらしい参照 ---\n' + urls.slice(0, 30).join('\n');
 });
 </script>
